@@ -91,3 +91,49 @@ header .subtitle {
     max-height: 300px;
     opacity: 0.7;
 }
+
+/* SVG and D3 specific styles */
+.line {
+    fill: none;
+    stroke-width: 3;
+}
+
+.line-paint {
+    stroke: #E71836; /* NBA red for paint points */
+}
+
+.line-perimeter {
+    stroke: #006BB6; /* NBA blue for perimeter points */
+}
+
+.line-pace {
+    stroke: #ED174C; /* NBA red for pace chart */
+}
+
+.axis path,
+.axis line {
+    stroke: #ddd;
+}
+
+.axis text {
+    font-size: 12px;
+    fill: #555;
+}
+
+/* Footer styles */
+footer {
+    background-color: #333;
+    color: white;
+    padding: 30px 0;
+    text-align: center;
+    margin-top: 60px;
+}
+
+footer a {
+    color: #66c2ff;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
