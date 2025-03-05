@@ -2,9 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA: Evolution of the Game</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
+    <header>
+        <div class="container">
+            <h1>NBA: Evolution of the Game</h1>
+            <p class="subtitle">Exploring how the NBA has transformed over the decades</p>
+        </div>
+    </header>
 
+    <main class="container">
+        <section id="intro" class="section">
+            <h2>The 3-Point Revolution</h2>
+            <p>The NBA has undergone significant changes over time, with one of the most dramatic shifts being the rise of the three-point shot. This visualization explores how the game has evolved from a predominantly inside scoring approach to a perimeter-focused style.</p>
+        </section>
+
+        <section id="three-point-evolution" class="section viz-section">
+            <h2>The Three-Point Revolution</h2>
+            <p>Since its introduction in the 1979-80 season, the three-point shot has transformed from a rarely-used tactic to the centerpiece of modern NBA offenses.</p>
+            <div id="three-point-spiral" class="visualization placeholder-viz">
+            </div>
+        </section>
+
+        <section id="quarter-scoring" class="section viz-section">
+            <h2>Quarter-by-Quarter Scoring Patterns</h2>
+            <p>Modern NBA teams score differently across quarters compared to teams of previous eras. This visualization breaks down how scoring patterns have evolved throughout the game.</p>
+            <div id="quarter-circle" class="visualization placeholder-viz">
+            </div>
+        </section>
+
+        <section id="court-visualization" class="section viz-section">
+            <h2>Scoring Location Trends</h2>
+            <p>This court visualization shows how the location of scoring has shifted over time across the basketball court.</p>
+            <div id="court-viz" class="visualization placeholder-viz">
+            </div>
+        </section>
+
+        <section id="game-pace" class="section viz-section">
+            <h2>The Pace of the Game</h2>
+            <p>How has the tempo and pace of NBA games evolved over the decades? This visualization shows the changing rhythm of NBA basketball.</p>
+            <div id="pace-chart" class="visualization">
+            </div>
+        </section>
+
+        <section id="scoring-distribution" class="section viz-section">
+            <h2>Paint vs. Perimeter Scoring</h2>
+            <p>Has the rise of three-point shooting changed where points come from? This visualization tracks the evolution of inside vs. outside scoring over time.</p>
+            <div id="paint-perimeter-chart" class="visualization">
+            </div>
+        </section>
+
+        <section id="conclusion" class="section">
+            <h2>The Future of the Game</h2>
+            <p>Concluding text...</p>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Data Source: NBA API via <a href="https://github.com/swar/nba_api">github.com/swar/nba_api</a></p>
+            <p>Created by: Mohamed Abdullah & Steven Li</p>
+            <p>CSC316 Final Project - 2025</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/paint_perimeter_chart.js"></script>
+    <script src="js/pace_chart.js"></script>
 </body>
 </html>
