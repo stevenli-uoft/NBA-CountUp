@@ -69,9 +69,10 @@ function processData(rawData) {
 
 // Initialize all visualizations
 function initializeVisualizations() {
+    createThreePointGraph();
+    createQuarterScoreViz();
     createPaintPerimeterChart();
     createPaceChart();
-
 }
 
 // Function to group data by season

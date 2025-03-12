@@ -137,3 +137,24 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
+
+
+.bar:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.chart-title {
+    fill: #333;
+}
+
+.axis-label {
+    fill: #666;
+    font-size: 12px;
+}
+
+.label {
+    fill: #333;
+    font-weight: bold;
+}
+
