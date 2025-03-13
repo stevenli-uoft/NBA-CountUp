@@ -1,11 +1,56 @@
-function createThreePointGraph() {
+// Set up dimensions and margins
+const margin = { top: 60, right: 70, bottom: 60, left: 70 };
+const width = 900 - margin.left - margin.right;
+const height = 900 - margin.top - margin.bottom;
+const centerX = width / 2;
+const centerY = height / 2;
+
+// Data for the spiral visualization (based on NBA statistics from 2000-2023)
+const spiralData = [
+    { season: 2000, totalPointsPerGame: 94.8, proportion3pt: 0.16, threePointPct: 0.35 },
+    { season: 2001, totalPointsPerGame: 95.5, proportion3pt: 0.17, threePointPct: 0.35 },
+    { season: 2002, totalPointsPerGame: 95.1, proportion3pt: 0.17, threePointPct: 0.35 },
+    { season: 2003, totalPointsPerGame: 93.4, proportion3pt: 0.18, threePointPct: 0.34 },
+    { season: 2004, totalPointsPerGame: 97.2, proportion3pt: 0.18, threePointPct: 0.35 },
+    { season: 2005, totalPointsPerGame: 99.5, proportion3pt: 0.19, threePointPct: 0.36 },
+    { season: 2006, totalPointsPerGame: 98.7, proportion3pt: 0.19, threePointPct: 0.36 },
+    { season: 2007, totalPointsPerGame: 100.0, proportion3pt: 0.20, threePointPct: 0.36 },
+    { season: 2008, totalPointsPerGame: 99.2, proportion3pt: 0.21, threePointPct: 0.36 },
+    { season: 2009, totalPointsPerGame: 100.4, proportion3pt: 0.22, threePointPct: 0.36 },
+    { season: 2010, totalPointsPerGame: 99.6, proportion3pt: 0.22, threePointPct: 0.36 },
+    { season: 2011, totalPointsPerGame: 96.3, proportion3pt: 0.23, threePointPct: 0.35 },
+    { season: 2012, totalPointsPerGame: 98.1, proportion3pt: 0.24, threePointPct: 0.36 },
+    { season: 2013, totalPointsPerGame: 101.0, proportion3pt: 0.25, threePointPct: 0.36 },
+    { season: 2014, totalPointsPerGame: 100.0, proportion3pt: 0.26, threePointPct: 0.35 },
+    { season: 2015, totalPointsPerGame: 102.7, proportion3pt: 0.28, threePointPct: 0.35 },
+    { season: 2016, totalPointsPerGame: 105.6, proportion3pt: 0.30, threePointPct: 0.36 },
+    { season: 2017, totalPointsPerGame: 106.3, proportion3pt: 0.32, threePointPct: 0.36 },
+    { season: 2018, totalPointsPerGame: 111.2, proportion3pt: 0.34, threePointPct: 0.36 },
+    { season: 2019, totalPointsPerGame: 111.8, proportion3pt: 0.35, threePointPct: 0.36 },
+    { season: 2020, totalPointsPerGame: 112.1, proportion3pt: 0.36, threePointPct: 0.37 },
+    { season: 2021, totalPointsPerGame: 112.0, proportion3pt: 0.36, threePointPct: 0.36 },
+    { season: 2022, totalPointsPerGame: 114.7, proportion3pt: 0.37, threePointPct: 0.36 },
+    { season: 2023, totalPointsPerGame: 115.3, proportion3pt: 0.38, threePointPct: 0.37 }
+];function createThreePointGraph(filteredData) {
+    // Since this visualization uses hardcoded data rather than the nbaData array,
+    // we'll just use the original implementation for now. In a real-world scenario,
+    // we would filter the spiral data based on the year range.
+    // Clear any existing SVG
+    d3.select("#three-point-spiral").html("");
+
+    // Get the container width to make visualization responsive
+    const containerWidth = document.getElementById('three-point-spiral').clientWidth;
+
+    // Calculate height to maintain aspect ratio (approximately square)
+    const containerHeight = Math.min(containerWidth, 700); // Limit max height
+
     // Set up dimensions and margins
     const margin = { top: 60, right: 70, bottom: 60, left: 70 };
-    const width = 900 - margin.left - margin.right;
-    const height = 900 - margin.top - margin.bottom;
+    const width = containerWidth - margin.left - margin.right;
+    const height = containerHeight - margin.top - margin.bottom;
     const centerX = width / 2;
     const centerY = height / 2;
-    
+
     // Data for the spiral visualization (based on NBA statistics from 2000-2023)
     const spiralData = [
         { season: 2000, totalPointsPerGame: 94.8, proportion3pt: 0.16, threePointPct: 0.35 },
@@ -33,35 +78,37 @@ function createThreePointGraph() {
         { season: 2022, totalPointsPerGame: 114.7, proportion3pt: 0.37, threePointPct: 0.36 },
         { season: 2023, totalPointsPerGame: 115.3, proportion3pt: 0.38, threePointPct: 0.37 }
     ];
-    
-    // Clear any existing SVG
-    d3.select("#three-point-spiral").html("");
-    
-    // Create the SVG container
+
+    // Create the SVG container - now centered and responsive
     const svg = d3.select("#three-point-spiral")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+        .attr("width", containerWidth)
+        .attr("height", containerHeight)
+        .attr("viewBox", `0 0 ${containerWidth} ${containerHeight}`)
         .attr("preserveAspectRatio", "xMidYMid meet")
         .append("g")
         .attr("transform", `translate(${margin.left + centerX}, ${margin.top + centerY})`);
-        
-    
+
+    // Use NBA color theme - more consistent with the site's theme
+    const nbaBlue = "#006BB6";
+    const nbaRed = "#E71836";
+    const nbaDarkBlue = "#17408B";
+    const nbaAccent = "#C9082A";
+
     // Add background circles for reference
     const radiusScale = d3.scaleLinear()
         .domain([90, 120])  // Range of points per game
-        .range([100, 400]);  // Visual radius range - increased for better spacing
-    
+        .range([80, Math.min(centerX, centerY) - 20]);  // Visual radius range - adjusted for container
+
     const circles = [90, 100, 110, 120];
-    
+
     // Add subtle background
     svg.append("circle")
         .attr("r", radiusScale(120) + 20)
         .attr("fill", "#f8f9fa")
         .attr("stroke", "#eaecef")
         .attr("stroke-width", 1);
-    
+
     // Add concentric circles with improved styling
     svg.selectAll(".reference-circle")
         .data(circles)
@@ -73,7 +120,7 @@ function createThreePointGraph() {
         .attr("stroke", "#dee2e6")
         .attr("stroke-width", 1)
         .attr("stroke-dasharray", "3,3");
-    
+
     // Add labels for the circles with improved styling
     svg.selectAll(".circle-label")
         .data(circles)
@@ -87,24 +134,24 @@ function createThreePointGraph() {
         .attr("font-family", "Arial, sans-serif")
         .attr("fill", "#6c757d")
         .text(d => `${d} pts`);
-    
+
     // Calculate angle for each season
-    const startAngle = -Math.PI / 2;  
-    const totalAngle = Math.PI * 2;   
-    
+    const startAngle = -Math.PI / 2;
+    const totalAngle = Math.PI * 2;
+
     const angleScale = d3.scaleLinear()
         .domain([2000, 2023])
         .range([startAngle, startAngle + totalAngle]);
-    
+
     const sizeScale = d3.scaleLinear()
         .domain([0.15, 0.40])  // Range of 3pt proportion
-        .range([6, 22]);       // Circle radius range in pixels - slightly larger
-    
-        
+        .range([5, 20]);       // Circle radius range in pixels - slightly adjusted
+
+    // Update color scale to use NBA blues for better coherence with the site theme
     const colorScale = d3.scaleLinear()
         .domain([0.33, 0.38])  // Range of 3pt percentage
-        .range(["#8ec3ff", "#0062cc"]);  // Light blue to better dark blue
-    
+        .range(["#8ec3ff", nbaDarkBlue]);  // Light blue to NBA dark blue
+
     // Create a spiral line with the data points
     const lineData = spiralData.map(d => {
         const angle = angleScale(d.season);
@@ -115,13 +162,13 @@ function createThreePointGraph() {
             season: d.season
         };
     });
-    
+
     // Add spiral line with improved styling
     const spiralLine = d3.line()
         .x(d => d.x)
         .y(d => d.y)
         .curve(d3.curveCardinal.tension(0.7)); // Smoother curve
-    
+
     svg.append("path")
         .datum(lineData)
         .attr("class", "spiral-line")
@@ -129,11 +176,11 @@ function createThreePointGraph() {
         .attr("stroke", "#adb5bd")
         .attr("stroke-width", 1.5)
         .attr("d", spiralLine);
-    
+
     // Create a group for data points for better organization
     const pointsGroup = svg.append("g")
         .attr("class", "data-points");
-    
+
     // Add data points (circles) with improved styling
     pointsGroup.selectAll(".data-point")
         .data(spiralData)
@@ -164,12 +211,12 @@ function createThreePointGraph() {
                 .attr("stroke-width", 2)
                 .attr("opacity", 1)
                 .style("filter", "drop-shadow(0px 2px 4px rgba(0,0,0,0.2))");
-            
+
             // Improved tooltip
             tooltip.transition()
                 .duration(200)
                 .style("opacity", 0.95);
-            
+
             tooltip.html(`
                 <div style="font-weight:bold;margin-bottom:4px;font-size:14px;">Season: ${d.season}-${(d.season + 1).toString().slice(2)}</div>
                 <div style="display:grid;grid-template-columns:auto auto;gap:4px;font-size:13px;">
@@ -181,8 +228,9 @@ function createThreePointGraph() {
                     <div style="text-align:right;font-weight:500;">${(d.threePointPct * 100).toFixed(1)}%</div>
                 </div>
             `)
-                .style("left", (event.pageX + 12) + "px")
-                .style("top", (event.pageY - 12) + "px");
+                // Use clientX/clientY with fixed positioning for accurate cursor following
+                .style("left", `${event.clientX + 15}px`)
+                .style("top", `${event.clientY - 70}px`);
         })
         .on("mouseout", function() {
             // Reset on mouseout
@@ -191,16 +239,24 @@ function createThreePointGraph() {
                 .attr("stroke-width", 1.5)
                 .attr("opacity", 0.85)
                 .style("filter", "drop-shadow(0px 1px 2px rgba(0,0,0,0.1))");
-            
+
             // Hide tooltip
             tooltip.transition()
                 .duration(400)
                 .style("opacity", 0);
         });
-    
-    // Add selected season labels with improved positioning and styling
-    const labelYears = [2000, 2007, 2015, 2020, 2023];
-    
+
+    // Only impactful season labels (Curry MVP, rule changes, etc.)
+    const labelYears = [2000, 2004, 2015, 2020];
+
+    // Historical context for the labels
+    const yearContexts = {
+        2000: "Pre-3PT Era",
+        2004: "Hand-check Rules",
+        2015: "Curry MVP Year",
+        2020: "Modern Era"
+    };
+
     svg.selectAll(".year-label")
         .data(labelYears)
         .enter()
@@ -210,12 +266,11 @@ function createThreePointGraph() {
             const angle = angleScale(d);
             const radius = radiusScale(spiralData.find(item => item.season === d).totalPointsPerGame);
             // Position just outside the point with more space
-            const x = Math.cos(angle) * (radius + 30);
-            const y = Math.sin(angle) * (radius + 30);
+            const x = Math.cos(angle) * (radius + 25);
+            const y = Math.sin(angle) * (radius + 25);
             return `translate(${x}, ${y})`;
         })
         .each(function(d) {
-            const angle = angleScale(d);
             // Create background for better readability
             d3.select(this)
                 .append("rect")
@@ -228,10 +283,12 @@ function createThreePointGraph() {
                 .attr("fill-opacity", 0.9)
                 .attr("stroke", "#dee2e6")
                 .attr("stroke-width", 1);
-            
-            // Add year text
-            d3.select(this)
-                .append("text")
+
+            // Add year text with context
+            const g = d3.select(this);
+
+            // Year number
+            g.append("text")
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "middle")
                 .attr("font-size", "13px")
@@ -239,8 +296,20 @@ function createThreePointGraph() {
                 .attr("font-family", "Arial, sans-serif")
                 .attr("fill", "#495057")
                 .text(d);
+
+            // Add small context label below
+            if (yearContexts[d]) {
+                g.append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("dominant-baseline", "middle")
+                    .attr("y", 15)
+                    .attr("font-size", "9px")
+                    .attr("font-family", "Arial, sans-serif")
+                    .attr("fill", "#495057")
+                    .text(yearContexts[d]);
+            }
         });
-    
+
     // Add connecting lines from points to labels for clarity
     svg.selectAll(".connector-line")
         .data(labelYears)
@@ -261,17 +330,17 @@ function createThreePointGraph() {
             const angle = angleScale(d);
             const radius = radiusScale(spiralData.find(item => item.season === d).totalPointsPerGame);
             // Connect to just before the label
-            return Math.cos(angle) * (radius + 25);
+            return Math.cos(angle) * (radius + 22);
         })
         .attr("y2", d => {
             const angle = angleScale(d);
             const radius = radiusScale(spiralData.find(item => item.season === d).totalPointsPerGame);
-            return Math.sin(angle) * (radius + 25);
+            return Math.sin(angle) * (radius + 22);
         })
         .attr("stroke", "#adb5bd")
         .attr("stroke-width", 1)
         .attr("stroke-dasharray", "2,2");
-    
+
     // Add center dot with improved styling
     svg.append("circle")
         .attr("cx", 0)
@@ -280,13 +349,13 @@ function createThreePointGraph() {
         .attr("fill", "#495057")
         .attr("stroke", "white")
         .attr("stroke-width", 1.5);
-    
-    // Create improved tooltip div
+
+    // Create improved tooltip div - updated with fixed positioning for more reliable placement
     const tooltip = d3.select("#three-point-spiral")
         .append("div")
         .attr("class", "tooltip")
         .style("opacity", 0)
-        .style("position", "absolute")
+        .style("position", "fixed") // Use fixed instead of absolute
         .style("background-color", "white")
         .style("border", "1px solid #dee2e6")
         .style("border-radius", "6px")
@@ -294,13 +363,14 @@ function createThreePointGraph() {
         .style("box-shadow", "0 2px 8px rgba(0,0,0,0.1)")
         .style("pointer-events", "none")
         .style("font-family", "Arial, sans-serif")
-        .style("z-index", "100");
+        .style("z-index", "9999"); // Higher z-index to ensure it's on top
 
 
+    // Add legend with improved styling
     const legend = svg.append("g")
         .attr("class", "legend")
-        .attr("transform", `translate(${-centerX - 250}, ${-centerY})`);
-    
+        .attr("transform", `translate(${-centerX + 20}, ${-centerY + 20})`);
+
     // Legend background for better readability
     legend.append("rect")
         .attr("x", -15)
@@ -312,7 +382,7 @@ function createThreePointGraph() {
         .attr("fill-opacity", 0.9)
         .attr("stroke", "#dee2e6")
         .attr("stroke-width", 1);
-    
+
     // Legend title
     legend.append("text")
         .attr("x", 0)
@@ -320,9 +390,9 @@ function createThreePointGraph() {
         .attr("font-size", "14px")
         .attr("font-weight", "bold")
         .attr("font-family", "Arial, sans-serif")
-        .attr("fill", "#212529")
+        .attr("fill", nbaBlue)
         .text("Three-Point Revolution");
-    
+
     // Legend items with icons for better visual understanding
     const legendItems = [
         { label: "Angular position = Season year", y: 35, icon: "clock" },
@@ -330,12 +400,12 @@ function createThreePointGraph() {
         { label: "Circle size = % of points from 3PT", y: 85, icon: "circle" },
         { label: "Color intensity = 3PT make %", y: 110, icon: "color" }
     ];
-    
+
     // Add legend items with icons
     legendItems.forEach(item => {
         const g = legend.append("g")
             .attr("transform", `translate(0, ${item.y})`);
-        
+
         // Add appropriate icon based on type
         if (item.icon === "clock") {
             g.append("circle")
@@ -343,45 +413,45 @@ function createThreePointGraph() {
                 .attr("cy", -4)
                 .attr("r", 8)
                 .attr("fill", "none")
-                .attr("stroke", "#495057")
+                .attr("stroke", nbaBlue)
                 .attr("stroke-width", 1.5);
-            
+
             // Add clock hands
             g.append("line")
                 .attr("x1", 0)
                 .attr("y1", -4)
                 .attr("x2", 0)
                 .attr("y2", -8)
-                .attr("stroke", "#495057")
+                .attr("stroke", nbaBlue)
                 .attr("stroke-width", 1.5);
-            
+
             g.append("line")
                 .attr("x1", 0)
                 .attr("y1", -4)
                 .attr("x2", 4)
                 .attr("y2", -4)
-                .attr("stroke", "#495057")
+                .attr("stroke", nbaBlue)
                 .attr("stroke-width", 1.5);
         } else if (item.icon === "radius") {
             g.append("circle")
                 .attr("cx", 0)
                 .attr("cy", -4)
                 .attr("r", 2)
-                .attr("fill", "#495057");
-            
+                .attr("fill", nbaBlue);
+
             g.append("line")
                 .attr("x1", 0)
                 .attr("y1", -4)
                 .attr("x2", 8)
                 .attr("y2", -4)
-                .attr("stroke", "#495057")
+                .attr("stroke", nbaBlue)
                 .attr("stroke-width", 1.5);
         } else if (item.icon === "circle") {
             g.append("circle")
                 .attr("cx", 0)
                 .attr("cy", -4)
                 .attr("r", 8)
-                .attr("fill", "#6c757d")
+                .attr("fill", nbaDarkBlue)
                 .attr("opacity", 0.8);
         } else if (item.icon === "color") {
             // Color gradient
@@ -389,15 +459,15 @@ function createThreePointGraph() {
                 .attr("id", "colorGradient")
                 .attr("x1", "0%")
                 .attr("x2", "100%");
-            
+
             gradient.append("stop")
                 .attr("offset", "0%")
                 .attr("stop-color", colorScale.range()[0]);
-            
+
             gradient.append("stop")
                 .attr("offset", "100%")
                 .attr("stop-color", colorScale.range()[1]);
-            
+
             g.append("rect")
                 .attr("x", -8)
                 .attr("y", -8)
@@ -405,7 +475,7 @@ function createThreePointGraph() {
                 .attr("height", 8)
                 .attr("fill", "url(#colorGradient)");
         }
-        
+
         // Add text for each item
         g.append("text")
             .attr("x", 20)

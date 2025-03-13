@@ -1,9 +1,17 @@
-function createQuarterScoreViz() {
+function createQuarterScoreViz(filteredData) {
+    // If filtered data is provided, use it; otherwise use all data
+    const dataToUse = filteredData || nbaData;
+    // NBA color theme constants
+    const nbaBlue = "#006BB6";
+    const nbaRed = "#E71836";
+    const nbaDarkBlue = "#17408B";
+    const nbaLightBlue = "#8ec3ff";
+
     // Set up dimensions
-    const width = 800;
-    const height = 800;
+    const width = Math.min(800, document.getElementById('quarter-circle').clientWidth);
+    const height = Math.min(800, window.innerHeight * 0.7); // Adjust for screen size
     const margin = 50;
-    const innerRadius = 100;
+    const innerRadius = 80;
     const outerRadius = Math.min(width, height) / 2 - margin;
 
     // Clear previous visualization if any
@@ -12,16 +20,14 @@ function createQuarterScoreViz() {
     // Create container for dropdown
     const container = d3.select('#quarter-circle')
         .style('position', 'relative')
-        .style('width', width + 'px')
+        .style('width', '100%')
         .style('height', height + 'px')
         .style('margin', '0 auto');
 
-    // Create dropdown
+    // Create dropdown with improved styling
     const dropdown = container.append('select')
         .attr('class', 'score-filter')
-        .style('position', 'absolute')
-        .style('top', '10px')
-        .style('left', '10px');
+        .style('margin-bottom', '15px');
 
     dropdown.selectAll('option')
         .data(['All Points', '3PT Points', 'Paint Points'])
@@ -39,6 +45,16 @@ function createQuarterScoreViz() {
         .append('g')
         .attr('transform', `translate(${width/2},${height/2})`);
 
+    // Title text
+    svg.append('text')
+        .attr('x', 0)
+        .attr('y', -height/2 + 20)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', '16px')
+        .attr('font-weight', 'bold')
+        .attr('fill', nbaDarkBlue)
+        .text('Quarter-by-Quarter Scoring Distribution');
+
     // Create tooltip
     const tooltip = d3.select('body').append('div')
         .attr('class', 'tooltip')
@@ -48,6 +64,7 @@ function createQuarterScoreViz() {
         .style('border', '1px solid #ddd')
         .style('padding', '10px')
         .style('border-radius', '5px')
+        .style('box-shadow', '0 2px 8px rgba(0,0,0,0.15)')
         .style('pointer-events', 'none');
 
     function updateVisualization(selectedType) {
@@ -63,28 +80,29 @@ function createQuarterScoreViz() {
 
                     games.forEach(game => {
                         if (type === '3PT Points') {
-                            totalHomePoints =  game.pts_qtr1_home + game.pts_qtr2_home + game.pts_qtr3_home + game.pts_qtr4_home;
-                            q1Proportion = game[`pts_qtr${quarter}_home`] / (totalHomePoints);
-                            
+                            totalHomePoints = game.pts_qtr1_home + game.pts_qtr2_home + game.pts_qtr3_home + game.pts_qtr4_home;
+                            q1Proportion = game[`pts_qtr${quarter}_home`] / (totalHomePoints || 1); // Avoid division by zero
 
-                            quarterPoints = (game.fg3m_home) * q1Proportion;
-                            totalPoints = (game.fg3m_home + game.fg3m_away) * 3;
+                            quarterPoints = (game.fg3m_home || 0) * q1Proportion;
+                            totalPoints = ((game.fg3m_home || 0) + (game.fg3m_away || 0)) * 3;
                         } else if (type === 'Paint Points') {
                             const totalHomePoints = game.pts_qtr1_home + game.pts_qtr2_home + game.pts_qtr3_home + game.pts_qtr4_home;
-                            const q1Proportion = game[`pts_qtr${quarter}_home`] / totalHomePoints;
-    
-                            quarterPoints = game.pts_paint_home * q1Proportion;
-                            totalPoints = game.pts_paint_home + game.pts_paint_away;
+                            const q1Proportion = game[`pts_qtr${quarter}_home`] / (totalHomePoints || 1); // Avoid division by zero
+
+                            quarterPoints = (game.pts_paint_home || 0) * q1Proportion;
+                            totalPoints = (game.pts_paint_home || 0) + (game.pts_paint_away || 0);
                         } else {
-                            quarterPoints = game[`pts_qtr${quarter}_home`] + game[`pts_qtr${quarter}_away`];
-                            totalPoints = game.pts_home + game.pts_away;
+                            quarterPoints = (game[`pts_qtr${quarter}_home`] || 0) + (game[`pts_qtr${quarter}_away`] || 0);
+                            totalPoints = (game.pts_home || 0) + (game.pts_away || 0);
                         }
                     });
 
+                    // Calculate average percentage for this quarter and season
+                    const gamesCount = games.length;
                     quarterData.push({
                         season: season,
                         quarter: quarter,
-                        percentage: quarterPoints / totalPoints || 0
+                        percentage: gamesCount > 0 ? quarterPoints / (totalPoints || 1) : 0
                     });
                 });
             });
@@ -92,8 +110,15 @@ function createQuarterScoreViz() {
             return quarterData;
         }
 
-        const data = processData(nbaData, selectedType);
-        
+        const data = processData(dataToUse, selectedType);
+
+        // Clear any existing elements
+        svg.selectAll('.quarter-arc').remove();
+        svg.selectAll('.quarter-label').remove();
+        svg.selectAll('.season-circle').remove();
+        svg.selectAll('.season-label').remove();
+        svg.selectAll('.legend').remove();
+
         if (data.length === 0) {
             svg.append('text')
                 .attr('x', 0)
@@ -112,8 +137,17 @@ function createQuarterScoreViz() {
             .domain(d3.extent(data, d => d.season))
             .range([innerRadius, outerRadius]);
 
-        const colorScale = d3.scaleSequential(d3.interpolateGreens)
-            .domain([0, 0.4]);
+        let colorScale;
+        if (selectedType === '3PT Points') {
+            colorScale = d3.scaleSequential(d => d3.interpolate(nbaLightBlue, nbaDarkBlue)(d * 2.5))
+                .domain([0, 0.4]);
+        } else if (selectedType === 'Paint Points') {
+            colorScale = d3.scaleSequential(d => d3.interpolate("#FFC5C5", nbaRed)(d * 2.5))
+                .domain([0, 0.4]);
+        } else {
+            colorScale = d3.scaleSequential(d3.interpolateGreens)
+                .domain([0, 0.4]);
+        }
 
         // Create arc generator
         const arc = d3.arc()
@@ -122,11 +156,6 @@ function createQuarterScoreViz() {
             .startAngle(d => angleScale(d.quarter - 1))
             .endAngle(d => angleScale(d.quarter));
 
-        // Clear previous paths
-        svg.selectAll('.quarter-arc').remove();
-        svg.selectAll('.quarter-label').remove();
-        svg.selectAll('.season-circle').remove();
-        
         // Add season circles for reference
         const seasons = [...new Set(data.map(d => d.season))].sort();
         svg.selectAll('.season-circle')
@@ -139,10 +168,10 @@ function createQuarterScoreViz() {
             .attr('stroke', '#ccc')
             .attr('stroke-width', 0.5)
             .attr('stroke-dasharray', '2,2');
-            
+
         // Add season labels
         svg.selectAll('.season-label')
-            .data(seasons.filter((_, i) => i % 5 === 0)) // Show every 5th season to avoid overcrowding
+            .data(seasons.filter((_, i) => i % 5 === 0))
             .enter()
             .append('text')
             .attr('class', 'season-label')
@@ -150,6 +179,7 @@ function createQuarterScoreViz() {
             .attr('y', d => -radiusScale(d) - 5)
             .attr('text-anchor', 'middle')
             .attr('font-size', '10px')
+            .attr('fill', '#666')
             .text(d => d);
 
         // Add quarter arcs
@@ -167,7 +197,11 @@ function createQuarterScoreViz() {
                 tooltip.transition()
                     .duration(200)
                     .style('opacity', .9);
-                tooltip.html(`Season: ${d.season}<br/>Quarter: ${d.quarter}<br/>Percentage: ${(d.percentage * 100).toFixed(1)}%`)
+                tooltip.html(`
+                    <strong>Season: ${d.season}</strong><br/>
+                    <strong>Quarter: ${d.quarter}</strong><br/>
+                    <strong>Percentage: ${(d.percentage * 100).toFixed(1)}%</strong>
+                `)
                     .style('left', (event.pageX + 10) + 'px')
                     .style('top', (event.pageY - 10) + 'px');
             })
@@ -178,7 +212,7 @@ function createQuarterScoreViz() {
                     .style('opacity', 0);
             });
 
-        // Add quarter labels
+        // Add quarter labels with improved styling
         const quarterLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
         const labelRadius = outerRadius + 20;
 
@@ -191,16 +225,28 @@ function createQuarterScoreViz() {
             .attr('y', (d, i) => labelRadius * Math.sin(angleScale(i + 0.5) - Math.PI/2))
             .attr('text-anchor', 'middle')
             .attr('alignment-baseline', 'middle')
+            .attr('font-weight', 'bold')
+            .attr('fill', nbaDarkBlue)
             .text(d => d);
-            
-        // Add a legend
+
+        // Add a legend with improved styling
         const legendData = [0.1, 0.2, 0.3, 0.4];
         const legendWidth = 20;
         const legendHeight = 20;
-        
+
         const legend = svg.append('g')
-            .attr('transform', `translate(${-width/2 + 50}, ${-height/2 + 50})`);
-            
+            .attr('class', 'legend')
+            .attr('transform', `translate(${-width/2 + 50}, ${-height/2 + 60})`);
+
+        // Add legend title
+        legend.append('text')
+            .attr('x', 0)
+            .attr('y', -10)
+            .attr('font-size', '12px')
+            .attr('font-weight', 'bold')
+            .attr('fill', '#333')
+            .text(`${selectedType} Distribution`);
+
         legend.selectAll('.legend-item')
             .data(legendData)
             .enter()
@@ -210,8 +256,10 @@ function createQuarterScoreViz() {
             .attr('y', (d, i) => i * (legendHeight + 5))
             .attr('width', legendWidth)
             .attr('height', legendHeight)
-            .attr('fill', d => colorScale(d));
-            
+            .attr('fill', d => colorScale(d))
+            .attr('stroke', '#fff')
+            .attr('stroke-width', 0.5);
+
         legend.selectAll('.legend-text')
             .data(legendData)
             .enter()
@@ -221,6 +269,7 @@ function createQuarterScoreViz() {
             .attr('y', (d, i) => i * (legendHeight + 5) + legendHeight/2)
             .attr('alignment-baseline', 'middle')
             .attr('font-size', '10px')
+            .attr('fill', '#333')
             .text(d => `${(d * 100).toFixed(0)}%`);
     }
 

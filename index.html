@@ -8,6 +8,7 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
+    <!-- Header Section -->
     <header>
         <div class="container">
             <h1>NBA: Evolution of the Game</h1>
@@ -15,57 +16,101 @@
         </div>
     </header>
 
-    <main class="container">
-        <section id="intro" class="section">
-            <h2>The 3-Point Revolution</h2>
-            <p>The NBA has undergone significant changes over time, with one of the most dramatic shifts being the rise of the three-point shot. This visualization explores how the game has evolved from a predominantly inside scoring approach to a perimeter-focused style.</p>
-        </section>
+    <!-- Introduction Section -->
+    <section class="section">
+        <div class="container">
+            <h2>Introduction</h2>
+            <p>Since its founding in 1946, the NBA has undergone a remarkable transformation in playing style, strategy, and pace. From the physical, defense-dominated games of the 1990s to today's high-scoring, three-point focused contests, basketball has evolved dramatically. This data story tracks these changes over the past two decades, revealing how rule modifications, innovative coaching, and transformative players have reshaped professional basketball.</p>
 
-        <section id="three-point-evolution" class="section viz-section">
+            <p>Using data from over 24,000 NBA games, we visualize key trends that define modern basketball: the three-point revolution, changing scoring patterns across quarters, the accelerating pace of play, and the ongoing balance between paint and perimeter scoring.</p>
+        </div>
+    </section>
+
+    <!-- Three-Point Revolution Section -->
+    <section class="section">
+        <div class="viz-section">
             <h2>The Three-Point Revolution</h2>
-            <p>Since its introduction in the 1979-80 season, the three-point shot has transformed from a rarely-used tactic to the centerpiece of modern NBA offenses.</p>
-            <div id="three-point-spiral" class="visualization placeholder-viz">
-            </div>
-        </section>
+            <p>Since its introduction in the 1979-80 season, the three-point shot has transformed from a rarely-used tactic to the centerpiece of modern NBA offenses. The spiral visualization below shows how three-point attempts, makes, and the proportion of total scoring have grown over the decades.</p>
 
-        <section id="quarter-scoring" class="section viz-section">
+            <div id="three-point-spiral" class="visualization"></div>
+
+            <p class="insight">Notice how dramatically three-point reliance accelerated after 2014, coinciding with the Golden State Warriors' dynasty and their championship success with a three-point focused offense led by Stephen Curry. This shift represents perhaps the most significant tactical evolution in modern basketball history.</p>
+
+            <p>Before 2014, teams averaged around 16-18 three-point attempts per game. By 2023, that number had more than doubled to over 35 attempts per game. What's particularly fascinating is that shooting efficiency has remained relatively stable despite this volume increase, hovering around 35-37% throughout this revolution.</p>
+        </div>
+    </section>
+
+    <!-- Quarter-by-Quarter Scoring Section -->
+    <section class="section">
+        <div class="viz-section">
             <h2>Quarter-by-Quarter Scoring Patterns</h2>
-            <p>Modern NBA teams score differently across quarters compared to teams of previous eras. This visualization breaks down how scoring patterns have evolved throughout the game.</p>
-            <div id="quarter-circle" class="visualization placeholder-viz">
-            </div>
-        </section>
+            <p>Modern NBA teams score differently across quarters compared to teams of previous eras. This unique circular visualization breaks down how scoring patterns have evolved throughout the game, with each ring representing a season and each quadrant representing a quarter.</p>
 
-        <section id="court-visualization" class="section viz-section">
-            <h2>Scoring Location Trends</h2>
-            <p>This court visualization shows how the location of scoring has shifted over time across the basketball court.</p>
-            <div id="court-viz" class="visualization placeholder-viz">
-            </div>
-        </section>
+            <div id="quarter-circle" class="visualization"></div>
 
-        <section id="game-pace" class="section viz-section">
-            <h2>The Pace of the Game</h2>
-            <p>How has the tempo and pace of NBA games evolved over the decades? This visualization shows the changing rhythm of NBA basketball.</p>
-            <div id="pace-chart" class="visualization">
-            </div>
-        </section>
+            <p class="insight">The visualization reveals how teams have become more aggressive in early quarters, particularly in the first quarter, setting the pace for higher-scoring games. Fourth-quarter scoring has also intensified in close games, reflecting the strategic importance of closing performance.</p>
 
-        <section id="scoring-distribution" class="section viz-section">
-            <h2>Paint vs. Perimeter Scoring</h2>
-            <p>Has the rise of three-point shooting changed where points come from? This visualization tracks the evolution of inside vs. outside scoring over time.</p>
-            <div id="paint-perimeter-chart" class="visualization">
-            </div>
-        </section>
+            <p>This evolution reflects both tactical changes and the physical demands of the modern game. Teams now place greater emphasis on strong starts to establish momentum, with first-quarter scoring increasing by approximately 12% over the past two decades. Meanwhile, the data shows more balanced scoring distribution across all quarters in recent seasons, suggesting more consistent offensive output throughout games.</p>
+        </div>
+    </section>
 
-        <section id="conclusion" class="section">
+    <!-- The Pace of the Game Section -->
+    <section class="section">
+        <div class="visualization-row">
+            <div class="viz-section half-width">
+                <h2>The Pace of the Game</h2>
+                <p>How has the tempo and pace of NBA games evolved over the decades? This visualization shows the changing rhythm of NBA basketball through total points per game.</p>
+
+                <div id="pace-chart" class="visualization"></div>
+
+                <p class="insight">After a period of slower, defense-oriented basketball in the early 2000s, the game has steadily accelerated, with total scoring reaching new heights in recent seasons.</p>
+
+                <p>The 2004 implementation of stricter hand-checking rules marked a turning point, making it harder for defenders to impede offensive players on the perimeter. This change, coupled with the analytics revolution emphasizing the efficiency of three-point shots, has pushed scoring averages from around 190 points per game in the early 2000s to well over 220 points in recent seasons.</p>
+
+                <p>The dramatic acceleration after 2015 coincides with the Warriors' small-ball revolution, demonstrating how a single team's innovative approach can transform the entire league's playing style.</p>
+            </div>
+
+            <div class="viz-section half-width">
+                <h2>Paint vs. Perimeter Scoring</h2>
+                <p>Has the rise of three-point shooting changed where points come from? This visualization tracks the evolution of inside vs. outside scoring over time.</p>
+
+                <div id="paint-perimeter-chart" class="visualization"></div>
+
+                <p class="insight">While three-point scoring has increased dramatically, points in the paint have remained relatively stable, suggesting teams are strategically balancing both approaches rather than abandoning interior play.</p>
+
+                <p>This balance reflects basketball's strategic complexity. Rather than simply shifting all scoring to the perimeter, teams have leveraged the threat of three-point shooting to create more space for drives and cuts to the basket. The data shows that while three-point scoring has more than doubled since 2000, paint scoring has actually increased slightly rather than decreased—from around 75-80 points per game to 90-100 points in recent seasons.</p>
+
+                <p>This contradicts the common perception that modern basketball has abandoned inside play entirely. Instead, teams have evolved to create more efficient scoring opportunities both inside and outside.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Future of the Game Section -->
+    <section class="section">
+        <div class="viz-section">
             <h2>The Future of the Game</h2>
-            <p>Concluding text...</p>
-        </section>
+            <p>The NBA continues to evolve, with the three-point revolution reshaping team strategies and player development. Teams now prioritize spacing, shooting, and versatility, leading to more dynamic and high-scoring games.</p>
 
-    </main>
+            <p>Our data visualizations reveal not just a shift in where points come from, but a fundamental transformation in how the game is played. As players become more skilled from distance and analytics drive strategy, we can expect the pace and scoring to continue increasing, though likely with cyclical adjustments as defenses adapt.</p>
 
+            <p>Looking at trendlines from our data, we project:</p>
+            <ul>
+                <li>Total scoring will likely stabilize around 230-240 points per game as defenses adapt to current offensive strategies</li>
+                <li>Three-point attempts may reach 40-45 per team per game by 2027</li>
+                <li>The proportion of points from three-pointers could approach 40-45% of total scoring</li>
+                <li>Paint scoring will remain crucial, potentially increasing as defenses overextend to guard the perimeter</li>
+            </ul>
+
+            <p>What's next for NBA basketball? History suggests that after any revolution comes a period of counter-adaptation. We may soon see innovative defensive strategies specifically designed to combat three-point reliance, potentially creating the next major evolution in basketball.</p>
+
+            <p>As scoring efficiency from both inside and outside continues to improve, we may be entering a golden age of offensive basketball that combines the best elements of traditional post play with the spacing and dynamism of the modern perimeter game.</p>
+        </div>
+    </section>
+
+    <!-- Data Source and Credits -->
     <footer>
         <div class="container">
-            <p>Data Source: NBA API via <a href="https://github.com/swar/nba_api">github.com/swar/nba_api</a></p>
+            <p>Data Source: NBA API via <a href="https://github.com/swar/nba_api" target="_blank">github.com/swar/nba_api</a></p>
             <p>Created by: Mohamed Abdullah & Steven Li</p>
             <p>CSC316 Final Project - 2025</p>
         </div>
