@@ -5,38 +5,58 @@
     box-sizing: border-box;
 }
 
+:root {
+    /* NBA Color Palette */
+    --nba-blue: #006BB6;
+    --nba-red: #E71836;
+    --nba-dark-blue: #17408B;
+    --nba-light-blue: #8ec3ff;
+    --nba-accent-red: #C9082A;
+    --nba-accent-blue: #1D428A;
+    --nba-bg-light: #f8f9fa;
+    --nba-text-dark: #333;
+    --nba-text-medium: #495057;
+    --nba-text-light: #6c757d;
+    --nba-border-light: #dee2e6;
+}
+
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f8f9fa;
+    color: var(--nba-text-dark);
+    background-color: var(--nba-bg-light);
 }
 
+/* Centered container for all content */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+    width: 100%;
 }
 
-/* Header styles */
+/* Header styles - centered */
 header {
-    background-color: #006BB6; /* NBA blue */
+    background-color: var(--nba-blue);
     color: white;
     padding: 40px 0;
     text-align: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
     font-size: 2.5rem;
     margin-bottom: 10px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 header .subtitle {
     font-size: 1.2rem;
     font-weight: 300;
+    opacity: 0.9;
 }
 
-/* Section styles */
+/* Section styles - centered content */
 .section {
     margin: 60px 0;
 }
@@ -44,52 +64,58 @@ header .subtitle {
 .section h2 {
     font-size: 1.8rem;
     margin-bottom: 20px;
-    color: #006BB6; /* NBA blue */
-    border-bottom: 2px solid #E71836; /* NBA red */
+    color: var(--nba-blue);
+    border-bottom: 2px solid var(--nba-red);
     padding-bottom: 10px;
+    text-align: center; /* Center section titles */
 }
 
+/* Centered paragraphs for readability */
 .section p {
     margin-bottom: 20px;
     font-size: 1.1rem;
+    color: var(--nba-text-medium);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* Visualization sections */
+/* Visualization sections - centered */
 .viz-section {
     background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 30px;
-    margin: 40px 0;
+    margin: 40px auto;
+    overflow: hidden;
+    max-width: 1100px;
 }
 
+/* Center visualization containers */
 .visualization {
     width: 100%;
-    height: 500px;
-    margin: 20px 0;
-}
-
-/* Placeholder styles */
-.placeholder-viz {
-    background-color: #f0f0f0;
+    min-height: 500px;
+    margin: 20px auto;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    text-align: center;
-    border: 2px dashed #ccc;
+    align-items: center;
+    position: relative;
 }
 
-.placeholder-text {
-    font-style: italic;
-    color: #666;
-    margin-bottom: 20px;
+/* Center the three-point spiral visualization specifically */
+#three-point-spiral {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: relative;
 }
 
-.placeholder-img {
-    max-width: 60%;
-    max-height: 300px;
-    opacity: 0.7;
+#three-point-spiral svg,
+#quarter-circle svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
 }
 
 /* SVG and D3 specific styles */
@@ -99,30 +125,55 @@ header .subtitle {
 }
 
 .line-paint {
-    stroke: #E71836; /* NBA red for paint points */
+    stroke: var(--nba-red);
 }
 
 .line-perimeter {
-    stroke: #006BB6; /* NBA blue for perimeter points */
+    stroke: var(--nba-blue);
 }
 
 .line-pace {
-    stroke: #ED174C; /* NBA red for pace chart */
+    stroke: var(--nba-red);
 }
 
 .axis path,
 .axis line {
-    stroke: #ddd;
+    stroke: var(--nba-border-light);
 }
 
 .axis text {
     font-size: 12px;
-    fill: #555;
+    fill: var(--nba-text-light);
 }
 
-/* Footer styles */
+/* Visualization row layout - centered */
+.visualization-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin: 40px auto;
+    justify-content: center;
+    max-width: 1100px;
+}
+
+.half-width {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* Insight paragraphs - centered */
+.insight {
+    font-style: italic;
+    color: var(--nba-text-medium);
+    border-left: 3px solid var(--nba-blue);
+    padding-left: 15px;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+/* Footer styles - already centered */
 footer {
-    background-color: #333;
+    background-color: var(--nba-dark-blue);
     color: white;
     padding: 30px 0;
     text-align: center;
@@ -130,10 +181,118 @@ footer {
 }
 
 footer a {
-    color: #66c2ff;
+    color: var(--nba-light-blue);
     text-decoration: none;
+    transition: color 0.2s;
 }
 
 footer a:hover {
     text-decoration: underline;
+    color: white;
+}
+
+/* Chart and visualization styles */
+.bar:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.chart-title {
+    fill: var(--nba-text-dark);
+    font-weight: bold;
+    font-size: 16px;
+    text-anchor: middle; /* Center chart titles */
+}
+
+.axis-label {
+    fill: var(--nba-text-medium);
+    font-size: 12px;
+    text-anchor: middle; /* Center axis labels */
+}
+
+.label {
+    fill: var(--nba-text-dark);
+    font-weight: bold;
+}
+
+/* Tooltip styling */
+.tooltip {
+    background-color: white;
+    border: 1px solid var(--nba-border-light);
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    pointer-events: none;
+    font-family: Arial, sans-serif;
+    z-index: 100;
+    max-width: 250px;
+}
+
+/* Center list items */
+.section ul {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 40px;
+}
+
+/* Quarter Circle Visualization Improvements - centered */
+#quarter-circle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#quarter-circle select.score-filter {
+    margin-bottom: 20px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--nba-border-light);
+    background-color: white;
+    color: var(--nba-text-dark);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.quarter-arc:hover {
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+/* Paint vs Perimeter Chart Improvements */
+#paint-perimeter-chart {
+    margin: 30px auto;
+}
+
+.dot {
+    fill: var(--nba-accent-red);
+    transition: all 0.2s;
+}
+
+.dot:hover {
+    fill: var(--nba-red);
+    r: 6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .visualization {
+        min-height: 400px;
+    }
+
+    .section h2 {
+        font-size: 1.5rem;
+    }
+
+    .section p {
+        font-size: 1rem;
+    }
+
+    .visualization-row {
+        flex-direction: column;
+    }
+
+    .half-width {
+        width: 100%;
+    }
 }

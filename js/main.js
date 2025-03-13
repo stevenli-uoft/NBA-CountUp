@@ -1,10 +1,48 @@
 // Global variables
 let nbaData = [];
+let selectedTimeRange = null; // To store the brush selection range
+
+// Event dispatcher for brush events
+const brushDispatcher = d3.dispatch("brushed");
+
+const NBA_COLORS = {
+    blue: "#006BB6",
+    red: "#E71836",
+    darkBlue: "#17408B",
+    lightBlue: "#8ec3ff",
+    accent: "#C9082A"
+};
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
+    // Add loading indicators
+    document.querySelectorAll('.visualization').forEach(viz => {
+        viz.innerHTML = '<div class="loading">Loading data...</div>';
+    });
+
     // Load the data
     loadData();
+
+    // Add smooth scrolling for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Add responsive behavior
+    window.addEventListener('resize', function() {
+        if (nbaData.length > 0) {
+            // Debounce resize events
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(function() {
+                initializeVisualizations();
+            }, 250);
+        }
+    });
 });
 
 // Load the NBA data
@@ -16,11 +54,19 @@ function loadData() {
             // Process and store the data
             nbaData = processData(data);
 
+            // Remove loading indicators
+            document.querySelectorAll('.loading').forEach(loader => {
+                loader.remove();
+            });
+
             // Initialize visualizations
             initializeVisualizations();
         })
         .catch(error => {
             console.error("Error loading the data:", error);
+            document.querySelectorAll('.visualization').forEach(viz => {
+                viz.innerHTML = '<div class="error">Error loading data. Please try again later.</div>';
+            });
         });
 }
 
@@ -69,9 +115,38 @@ function processData(rawData) {
 
 // Initialize all visualizations
 function initializeVisualizations() {
+    createThreePointGraph();
+    createQuarterScoreViz();
     createPaintPerimeterChart();
     createPaceChart();
 
+    // Listen for brush events and update all visualizations
+    brushDispatcher.on("brushed", function(event) {
+        selectedTimeRange = event.selection;
+        // Redraw visualizations with the filtered timeframe
+        if (selectedTimeRange) {
+            updateVisualizations(selectedTimeRange);
+        }
+    });
+}
+
+// Function to update all visualizations with a time filter
+function updateVisualizations(timeRange) {
+    const [startYear, endYear] = timeRange;
+
+    // Filter data for the selected time range
+    const filteredData = nbaData.filter(d => {
+        return d.season >= startYear && d.season <= endYear;
+    });
+
+    // Only redraw if we have data
+    if (filteredData.length > 0) {
+        // Don't recreate the pace chart (that's where the brush is)
+        // Don't update three-point spiral (it doesn't support filtering)
+        // Only update the other visualizations
+        createQuarterScoreViz(filteredData);
+        createPaintPerimeterChart(filteredData);
+    }
 }
 
 // Function to group data by season
