@@ -369,7 +369,7 @@ const spiralData = [
     // Add legend with improved styling
     const legend = svg.append("g")
         .attr("class", "legend")
-        .attr("transform", `translate(${-centerX - 55}, ${-centerY - 30})`);
+        .attr("transform", `translate(${-centerX - 50}, ${-centerY - 30})`);
 
     // Legend background for better readability
     legend.append("rect")
