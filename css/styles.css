@@ -109,7 +109,7 @@ header .subtitle {
 
 .section:first-of-type p {
     color: black; /* Changes text color to white */
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Optional: adds shadow for better readability */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Adds a subtle shadow for better readability */
 }
 
 
@@ -318,7 +318,7 @@ footer a:hover {
 /* Responsive adjustments */
 @media (max-width: 768px) {
     body::before {
-        background-position: 70% center; /* Adjust background positioning for mobile */
+        background-position: 70% center; /* Adjusts background positioning for mobile */
     }
 
     .visualization {
