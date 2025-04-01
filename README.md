@@ -17,8 +17,8 @@ This visualization project consists of multiple interactive charts that demonstr
 
 ## Live Demo
 
-- **Project Website**: 
-- **Demo Video**: 
+- **Project Website**: https://stevenli-uoft.github.io/NBA-CountUp/
+- **Demo Video**: [video link](https://utoronto-my.sharepoint.com/:v:/g/personal/stevency_li_mail_utoronto_ca/EUjCQarYxsFEoSY7zAZjulwB5BcT3N6XWhoFBCWRB344_g?e=wROvGf)
 
 ## Technical Implementation
 
